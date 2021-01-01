@@ -1,12 +1,11 @@
 {
-  "name": "@lukeshay/scripts",
+  "name": "@yarn-berry-typescript-monorepo/scripts",
   "private": true,
   "scripts": {
-    "link": "ts-node src/link.ts",
-    "lint": "eslint 'src/**/*.ts'",
-    "test": "jest"
-  },
-  "devDependencies": {
-    "eslint": "^7.8.1"
+    "clean": "echo \"Nothing to clean\" && exit 0",
+    "prebuild": "yarn clean",
+    "format": "deno fmt",
+    "lint": "deno lint --unstable",
+    "test": "echo \"No tests\" && exit 0"
   }
 }

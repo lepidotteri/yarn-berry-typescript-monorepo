@@ -1,6 +1,6 @@
 # Yarn Berry TypeScript Monorepo Template
 
-This repo is a template for creating a monorepo that uses TypeScript, Jest, and RollupJS. These are the tools I gravitate towards so I decided I would make a template. If anybody finds any bugs, you can submit and issue or create a PR and I will review it. The TypeScript and ESLint configs are setup for Node projects but can easily be modified for browser projects.
+This repo is a template for creating a monorepo that uses TypeScript and Yarn Berry. These are the tools I gravitate towards so I decided I would make a template. If anybody finds any bugs, you can submit and issue or create a PR and I will review it. The TypeScript and ESLint configs are setup for Deno projects but can easily be modified for other runtimes.
 
 I will continue to add new scripts to this repository as I create useful ones.
 
@@ -12,7 +12,7 @@ There is a command in the `package.json` that will do the setup for you, but thi
 yarn setup
 ```
 
-To setup the repo for yourself, run the following command:
+Or to setup the repo for yourself, manually, run the following commands:
 
 ```bash
 yarn policies set-version berry && yarn set version berry
@@ -32,7 +32,7 @@ yarn
 
 You now have this repo setup!
 
-## Creating a New Package
+## [OPTIONAL] Creating a New Package
 
 Generally this is a very manual process, but since most of the time the packages all need the same configuration in a monorepo, I built a script that will create a new package in the packages directory. In order to create a new package, run the following command in the root of the repository:
 

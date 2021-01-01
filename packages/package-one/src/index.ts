@@ -1,1 +1,0 @@
-export const PACKAGE = '@lukeshay/package-one';

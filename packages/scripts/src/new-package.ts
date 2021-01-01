@@ -1,60 +1,71 @@
-import * as fs from 'fs';
-import { getPackage } from './common';
+import { getPackage } from "./common.ts";
+
+const PROJECT_PREFIX = "@yarn-berry-typescript-monorepo";
 
 function generatePackage(name: string): string {
   const devDependencies = getPackage().devDependencies;
 
-  return JSON.stringify({
-    name: `@lukeshay/${name}`,
-    version: '0.0.1',
-    license: 'MIT',
-    author: 'Luke Shay',
-    input: 'src/index.ts',
-    main: 'dist/index.js',
-    module: 'dist/index.mjs',
-    types: 'dist/types/index.d.ts',
-    scripts: {
-      prebuild: 'yarn clean',
-      build: 'rollup --config',
-      'build:debug': 'yarn build --debug',
-      lint: "eslint 'src/**/*.ts{,x}'",
-      format: 'yarn lint --fix',
-      clean: 'rm -rf dist/ coverage/ test_output/ *.log',
-      test: 'jest',
+  return JSON.stringify(
+    {
+      name: `${PROJECT_PREFIX}/${name}`,
+      version: "0.0.1",
+      license: "MIT",
+      author: "lepidotteri",
+      input: "src/index.ts",
+      main: "dist/index.js",
+      module: "dist/index.mjs",
+      types: "dist/types/index.d.ts",
+      scripts: {
+        clean: 'echo "Nothing to clean" && exit 0',
+        prebuild: "yarn clean",
+        format: "deno fmt",
+        lint: "deno lint --unstable",
+        test: 'echo "No tests" && exit 0',
+      },
+      devDependencies,
     },
-    devDependencies,
-  });
+    null,
+    2,
+  );
 }
 
-async function run(): Promise<number | null> {
-  const args = process.argv.slice(2);
-
+function run(): Promise<string | null> {
+  const args = Deno.args;
   if (args.length === 0) {
-    throw { message: 'You must provide the package name as the first argument.' };
+    throw {
+      message: "You must provide the package name as the first argument.",
+    };
   }
 
   const newPackage = `packages/${args[0]}`;
 
-  if (!fs.existsSync(newPackage)) fs.mkdirSync(newPackage);
-
-  fs.mkdirSync(`${newPackage}/src`);
+  Deno.mkdirSync(newPackage);
+  Deno.mkdirSync(`${newPackage}/src`);
 
   const pkgFile = generatePackage(args[0]);
 
-  fs.writeFileSync(`${newPackage}/src/index.ts`, `export const PACKAGE = '@lukeshay/${args[0]}';`);
-  fs.writeFileSync(`${newPackage}/package.json`, pkgFile);
-  fs.writeFileSync(`${newPackage}/README.md`, `@lukeshay/${args[0]}`);
-  fs.copyFileSync('configs/.eslintrc.js', `${newPackage}/.eslintrc.js`);
-  fs.copyFileSync('configs/tsconfig.json5', `${newPackage}/tsconfig.json5`);
-  fs.copyFileSync('configs/rollup.config.js', `${newPackage}/rollup.config.js`);
-  fs.copyFileSync('configs/jest.config.js', `${newPackage}/jest.config.js`);
+  const encoder = new TextEncoder();
+  Deno.writeFileSync(
+    `${newPackage}/src/index.ts`,
+    encoder.encode(`export const PACKAGE = '${PROJECT_PREFIX}/${args[0]}';`),
+  );
+  Deno.writeFileSync(`${newPackage}/package.json`, encoder.encode(pkgFile));
+  Deno.writeFileSync(
+    `${newPackage}/README.md`,
+    encoder.encode(`@lepidotteri/${args[0]}`),
+  );
+  Deno.copyFileSync("configs/.eslintrc.yaml", `${newPackage}/.eslintrc.yaml`);
+  Deno.copyFileSync("configs/tsconfig.json", `${newPackage}/tsconfig.json`);
 
-  return 0;
+  return newPackage;
 }
 
 run()
-  .then((value) => process.exit(value || 0))
+  .then((value) => {
+    console.log(value ? "OK: " + value : undefined);
+    Deno.exit(value ? 0 : 1);
+  })
   .catch((err) => {
     console.log(err.message);
-    process.exit(1);
+    Deno.exit(1);
   });

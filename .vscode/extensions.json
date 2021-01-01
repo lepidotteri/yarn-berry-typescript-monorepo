@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "denoland.vscode-deno-canary",
     "arcanis.vscode-zipfs",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode"

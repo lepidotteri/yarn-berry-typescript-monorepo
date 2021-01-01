@@ -3,12 +3,8 @@ env:
 extends:
   - eslint:recommended
   - plugin:prettier/recommended
-  - plugin:node/recommended
-  - plugin:jest/recommended
 plugins:
   - prettier
-  - node
-  - jest
 root: true
 rules:
   import/extensions: 'off'
@@ -19,10 +15,6 @@ rules:
   operator-linebreak: 'off'
   prefer-arrow-callback: 'error'
   prettier/prettier: 'error'
-  node/no-unsupported-features/es-syntax: 'off'
-  node/no-missing-import: 'off'
-  node/no-missing-require: 'off'
-  node/shebang: 'off'
   no-param-reassign:
     - error
     - props: true
@@ -37,13 +29,8 @@ overrides:
       - '**/__mocks__/**'
       - '**/__helpers__/**'
       - '**/*.js'
-    env:
-      jest: true
     rules:
       import/no-extraneous-dependencies: 'off'
       no-console: 'off'
       no-param-reassign: 'off'
-      node/no-extraneous-import: 'off'
-      node/no-extraneous-require: 'off'
-      node/no-unpublished-import: 'off'
       strict: 'off'
